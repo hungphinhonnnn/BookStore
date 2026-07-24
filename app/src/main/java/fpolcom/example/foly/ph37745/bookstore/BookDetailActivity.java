@@ -23,6 +23,7 @@ import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.ApiResponse;
 import an.ph69924.bansach.models.Book;
 import an.ph69924.bansach.models.CartResponse;
+import an.ph69924.bansach.utils.PriceFormatter;
 import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -119,7 +120,7 @@ public class BookDetailActivity extends AppCompatActivity {
         currentBook = book;
         tvTitle.setText(book.getTitle());
         tvAuthor.setText(book.getAuthor());
-        tvPrice.setText(String.format("%,.0f đ", book.getPrice()));
+        tvPrice.setText(PriceFormatter.formatVnd(book.getPrice()));
         tvDescription.setText(book.getDescription());
 
         if (book.getCategory() != null) {

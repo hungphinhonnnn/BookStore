@@ -25,6 +25,7 @@ import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.ApiResponse;
 import an.ph69924.bansach.models.Order;
 import an.ph69924.bansach.models.OrderItem;
+import an.ph69924.bansach.utils.PriceFormatter;
 import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -188,20 +189,19 @@ public class OrderDetailActivity extends AppCompatActivity {
             
             double total = order.getTotalAmount();
             if (total > 0) {
-                tvTotalAmount.setText(String.format("%,.0f đ", total));
-                tvSubtotal.setText(String.format("%,.0f đ", total - shippingFee));
+                tvTotalAmount.setText(PriceFormatter.formatVnd(total));
+                tvSubtotal.setText(PriceFormatter.formatVnd(total - shippingFee));
             } else {
-                tvSubtotal.setText(String.format("%,.0f đ", subtotal));
-                tvTotalAmount.setText(String.format("%,.0f đ", subtotal + shippingFee));
+                tvSubtotal.setText(PriceFormatter.formatVnd(subtotal));
+                tvTotalAmount.setText(PriceFormatter.formatVnd(subtotal + shippingFee));
             }
         }
         
-        tvShippingFee.setText(String.format("%,.0f đ", shippingFee));
+        tvShippingFee.setText(PriceFormatter.formatVnd(shippingFee));
     }
 
     private void showProgress(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }
-
 

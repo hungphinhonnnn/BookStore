@@ -25,6 +25,7 @@ import an.ph69924.bansach.models.ApiResponse;
 import an.ph69924.bansach.models.CartResponse;
 import an.ph69924.bansach.models.Order;
 import an.ph69924.bansach.models.User;
+import an.ph69924.bansach.utils.PriceFormatter;
 import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -156,9 +157,9 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void updateUI() {
         tvItemCount.setText(itemCount + " sản phẩm");
-        tvSubtotal.setText(String.format("%,.0f đ", subtotal));
-        tvShippingFee.setText(String.format("%,.0f đ", shippingFee));
-        tvTotalAmount.setText(String.format("%,.0f đ", totalAmount));
+        tvSubtotal.setText(PriceFormatter.formatVnd(subtotal));
+        tvShippingFee.setText(PriceFormatter.formatVnd(shippingFee));
+        tvTotalAmount.setText(PriceFormatter.formatVnd(totalAmount));
     }
 
     private void placeOrder() {
@@ -242,5 +243,4 @@ public class CheckoutActivity extends AppCompatActivity {
         btnPlaceOrder.setEnabled(!show);
     }
 }
-
 

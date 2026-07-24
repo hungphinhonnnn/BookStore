@@ -5,23 +5,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +36,11 @@ import retrofit2.Response;
 
 public class BookListActivity extends AppCompatActivity {
     private static final String TAG = "BookListActivity";
+
     private RecyclerView recyclerViewBooks;
     private BookAdapter bookAdapter;
-    private TextInputEditText edtSearch;
-    private Spinner spinnerCategory;
-    private Button btnFilter;
+    private EditText edtSearch;
+    private LinearLayout categoryContainer;
     private ProgressBar progressBar;
     private TextView tvEmpty;
     private ApiService apiService;
@@ -62,7 +58,6 @@ public class BookListActivity extends AppCompatActivity {
         apiService = RetrofitClient.getInstance().getApiService();
         prefManager = new SharedPreferencesManager(this);
 
-        // Kiểm tra đăng nhập
         if (!prefManager.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -70,58 +65,20 @@ public class BookListActivity extends AppCompatActivity {
         }
 
         initViews();
-        setupToolbar();
         setupRecyclerView();
         setupSearch();
-        setupFilter();
+        setupActions();
+        renderCategoryChips();
         loadCategories();
         loadBooks();
-
-        findViewById(R.id.fabProfile).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProfileActivity.class));
-        });
     }
 
     private void initViews() {
         recyclerViewBooks = findViewById(R.id.recyclerViewBooks);
         edtSearch = findViewById(R.id.edtSearch);
-        spinnerCategory = findViewById(R.id.spinnerCategory);
-        btnFilter = findViewById(R.id.btnFilter);
+        categoryContainer = findViewById(R.id.categoryContainer);
         progressBar = findViewById(R.id.progressBar);
         tvEmpty = findViewById(R.id.tvEmpty);
-    }
-
-    private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_cart) {
-            startActivity(new Intent(this, CartActivity.class));
-            return true;
-        } else if (itemId == R.id.menu_orders) {
-            startActivity(new Intent(this, OrderHistoryActivity.class));
-            return true;
-        } else if (itemId == R.id.menu_logout) {
-            prefManager.clear();
-            Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void setupRecyclerView() {
@@ -130,14 +87,15 @@ public class BookListActivity extends AppCompatActivity {
             intent.putExtra("book_id", book.getId());
             startActivity(intent);
         });
-        recyclerViewBooks.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewBooks.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerViewBooks.setAdapter(bookAdapter);
     }
 
     private void setupSearch() {
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -146,16 +104,37 @@ public class BookListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
-    private void setupFilter() {
-        btnFilter.setOnClickListener(v -> {
-            // Reset filter
-            selectedCategoryId = null;
-            spinnerCategory.setSelection(0);
-            filterBooks();
+    private void setupActions() {
+        findViewById(R.id.btnCart).setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
+        findViewById(R.id.btnProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
+        findViewById(R.id.btnOrders).setOnClickListener(v -> startActivity(new Intent(this, OrderHistoryActivity.class)));
+        findViewById(R.id.btnExplore).setOnClickListener(v -> clearFilters());
+        findViewById(R.id.btnAllCategories).setOnClickListener(v -> clearFilters());
+        findViewById(R.id.btnExploreAll).setOnClickListener(v -> clearFilters());
+
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.nav_home);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                clearFilters();
+                return true;
+            } else if (itemId == R.id.nav_category) {
+                clearFilters();
+                return true;
+            } else if (itemId == R.id.nav_cart) {
+                startActivity(new Intent(this, CartActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(this, ProfileActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 
@@ -165,10 +144,9 @@ public class BookListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    categories = response.body().getCategories();
-                    if (categories != null) {
-                        setupCategorySpinner();
-                    }
+                    List<Category> loadedCategories = response.body().getCategories();
+                    categories = loadedCategories != null ? loadedCategories : new ArrayList<>();
+                    renderCategoryChips();
                 } else {
                     Log.w(TAG, "Load categories failed: code=" + response.code() + ", msg=" + response.message());
                 }
@@ -181,32 +159,41 @@ public class BookListActivity extends AppCompatActivity {
         });
     }
 
-    private void setupCategorySpinner() {
-        List<String> categoryNames = new ArrayList<>();
-        categoryNames.add("Tất cả thể loại");
-        for (Category category : categories) {
-            categoryNames.add(category.getName());
+    private void renderCategoryChips() {
+        if (categoryContainer == null) {
+            return;
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, categoryNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategory.setAdapter(adapter);
+        categoryContainer.removeAllViews();
+        addCategoryChip("Tất cả", null, selectedCategoryId == null);
 
-        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    selectedCategoryId = null;
-                } else {
-                    selectedCategoryId = categories.get(position - 1).getId();
-                }
-                filterBooks();
-            }
+        for (Category category : categories) {
+            addCategoryChip(category.getName(), category.getId(), category.getId().equals(selectedCategoryId));
+        }
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+    private void addCategoryChip(String label, String categoryId, boolean selected) {
+        TextView chip = new TextView(this);
+        chip.setText(label);
+        chip.setGravity(Gravity.CENTER);
+        chip.setTextSize(15);
+        chip.setTextColor(selected ? 0xFF075BD8 : 0xFF4B5563);
+        chip.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        chip.setBackgroundResource(selected ? R.drawable.bg_category_chip_selected : R.drawable.bg_category_chip);
+        chip.setMinWidth(dp(88));
+        chip.setMaxLines(2);
+        chip.setOnClickListener(v -> {
+            selectedCategoryId = categoryId;
+            renderCategoryChips();
+            filterBooks();
         });
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                dp(64)
+        );
+        params.setMarginEnd(dp(12));
+        categoryContainer.addView(chip, params);
     }
 
     private void loadBooks() {
@@ -218,12 +205,8 @@ public class BookListActivity extends AppCompatActivity {
                 showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     List<Book> books = response.body().getBooks();
-                    if (books != null) {
-                        allBooks = books;
-                        filterBooks();
-                    } else {
-                        showEmpty(true);
-                    }
+                    allBooks = books != null ? books : new ArrayList<>();
+                    filterBooks();
                 } else {
                     showEmpty(true);
                     String msg = "Không thể tải danh sách sách (HTTP " + response.code() + " - " + response.message() + ")";
@@ -244,23 +227,30 @@ public class BookListActivity extends AppCompatActivity {
 
     private void filterBooks() {
         List<Book> filteredBooks = new ArrayList<>();
+        String normalizedQuery = searchQuery.toLowerCase();
 
         for (Book book : allBooks) {
-            // Filter by search
-            if (searchQuery.isEmpty() || 
-                book.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                book.getAuthor().toLowerCase().contains(searchQuery.toLowerCase())) {
-                
-                // Filter by category
-                if (selectedCategoryId == null || 
-                    (book.getCategory() != null && book.getCategory().getId().equals(selectedCategoryId))) {
-                    filteredBooks.add(book);
-                }
+            boolean matchesSearch = normalizedQuery.isEmpty()
+                    || safeLower(book.getTitle()).contains(normalizedQuery)
+                    || safeLower(book.getAuthor()).contains(normalizedQuery);
+            boolean matchesCategory = selectedCategoryId == null
+                    || (book.getCategory() != null && selectedCategoryId.equals(book.getCategory().getId()));
+
+            if (matchesSearch && matchesCategory) {
+                filteredBooks.add(book);
             }
         }
 
         bookAdapter.updateBooks(filteredBooks);
         showEmpty(filteredBooks.isEmpty());
+    }
+
+    private void clearFilters() {
+        selectedCategoryId = null;
+        searchQuery = "";
+        edtSearch.setText("");
+        renderCategoryChips();
+        filterBooks();
     }
 
     private void showProgress(boolean show) {
@@ -271,5 +261,13 @@ public class BookListActivity extends AppCompatActivity {
     private void showEmpty(boolean show) {
         tvEmpty.setVisibility(show ? View.VISIBLE : View.GONE);
         recyclerViewBooks.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
+
+    private String safeLower(String value) {
+        return value == null ? "" : value.toLowerCase();
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 }

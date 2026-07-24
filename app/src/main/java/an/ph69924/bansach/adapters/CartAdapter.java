@@ -17,6 +17,7 @@ import java.util.List;
 import fpolcom.example.foly.ph37745.bookstore.R;
 import an.ph69924.bansach.models.Book;
 import an.ph69924.bansach.models.CartItem;
+import an.ph69924.bansach.utils.PriceFormatter;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     public interface OnCartItemClickListener {
@@ -45,9 +46,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         Book book = item.getBook();
         holder.tvTitle.setText(book != null ? book.getTitle() : "");
         holder.tvAuthor.setText(book != null ? book.getAuthor() : "");
-        holder.tvPrice.setText(String.format("%,.0f d", item.getPrice()));
+        holder.tvPrice.setText(PriceFormatter.formatVnd(item.getPrice()));
         holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
-        holder.tvSubtotal.setText(String.format("%,.0f d", item.getSubtotal()));
+        holder.tvSubtotal.setText(PriceFormatter.formatVnd(item.getSubtotal()));
         loadImage(holder.imgBookCover, book != null ? book.getCoverImage() : null);
 
         holder.btnDecrease.setOnClickListener(v -> {

@@ -13,6 +13,7 @@ import java.util.List;
 
 import fpolcom.example.foly.ph37745.bookstore.R;
 import an.ph69924.bansach.models.Order;
+import an.ph69924.bansach.utils.PriceFormatter;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
     public interface OnOrderClickListener {
@@ -41,7 +42,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.tvOrderId.setText("Don hang #" + (id.length() > 8 ? id.substring(id.length() - 8) : id));
         holder.tvStatus.setText(order.getStatusDisplayName());
         holder.tvItemCount.setText(order.getItems() != null ? order.getItems().size() + " san pham" : "0 san pham");
-        holder.tvTotalAmount.setText(String.format("%,.0f d", order.getTotalAmount()));
+        holder.tvTotalAmount.setText(PriceFormatter.formatVnd(order.getTotalAmount()));
         holder.tvCreatedAt.setText(order.getCreatedAt() != null ? order.getCreatedAt() : "");
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onOrderClick(order);

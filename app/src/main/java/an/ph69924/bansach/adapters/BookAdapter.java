@@ -16,6 +16,7 @@ import java.util.List;
 
 import fpolcom.example.foly.ph37745.bookstore.R;
 import an.ph69924.bansach.models.Book;
+import an.ph69924.bansach.utils.PriceFormatter;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     public interface OnBookClickListener {
@@ -42,7 +43,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         Book book = books.get(position);
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
-        holder.tvPrice.setText(String.format("%,.0f d", book.getPrice()));
+        holder.tvPrice.setText(PriceFormatter.formatVnd(book.getPrice()));
         holder.tvCategory.setText(book.getCategory() != null ? book.getCategory().getName() : "Khong phan loai");
         loadImage(holder.imgBookCover, book.getCoverImage());
         holder.itemView.setOnClickListener(v -> {

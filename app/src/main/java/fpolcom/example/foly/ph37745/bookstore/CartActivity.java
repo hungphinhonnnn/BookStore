@@ -25,6 +25,7 @@ import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.ApiResponse;
 import an.ph69924.bansach.models.CartItem;
 import an.ph69924.bansach.models.CartResponse;
+import an.ph69924.bansach.utils.PriceFormatter;
 import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -228,7 +229,7 @@ public class CartActivity extends AppCompatActivity {
 
     private void updateUI() {
         cartAdapter.updateCartItems(cartItems);
-        tvTotalAmount.setText(String.format("%,.0f đ", totalAmount));
+        tvTotalAmount.setText(PriceFormatter.formatVnd(totalAmount));
         btnCheckout.setEnabled(!cartItems.isEmpty());
         showEmpty(cartItems.isEmpty());
     }
@@ -249,5 +250,4 @@ public class CartActivity extends AppCompatActivity {
         loadCart(); // Reload cart when returning to this activity
     }
 }
-
 
