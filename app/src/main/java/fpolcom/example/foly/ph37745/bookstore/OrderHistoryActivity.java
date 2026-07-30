@@ -86,7 +86,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
     private void loadOrders() {
         showProgress(true);
-        Call<ApiResponse<OrdersResponse>> call = apiService.getOrders();
+        Call<ApiResponse<OrdersResponse>> call = apiService.getOrders(prefManager.getAuthHeader());
         call.enqueue(new Callback<ApiResponse<OrdersResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<OrdersResponse>> call, Response<ApiResponse<OrdersResponse>> response) {
@@ -143,5 +143,4 @@ public class OrderHistoryActivity extends AppCompatActivity {
         loadOrders(); // Reload orders when returning to this activity
     }
 }
-
 

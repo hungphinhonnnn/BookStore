@@ -49,28 +49,28 @@ public interface ApiService {
     Call<CategoriesResponse> getCategories();
 
     @GET("api/cart")
-    Call<ApiResponse<CartResponse>> getCart();
+    Call<ApiResponse<CartResponse>> getCart(@Header("Authorization") String token);
 
     @POST("api/cart")
-    Call<ApiResponse<CartResponse>> addToCart(@Body Map<String, Object> body);
+    Call<ApiResponse<CartResponse>> addToCart(@Header("Authorization") String token, @Body Map<String, Object> body);
 
     @PUT("api/cart")
-    Call<ApiResponse<CartResponse>> updateCartItem(@Body Map<String, Object> body);
+    Call<ApiResponse<CartResponse>> updateCartItem(@Header("Authorization") String token, @Body Map<String, Object> body);
 
     @retrofit2.http.DELETE("api/cart/{bookId}")
-    Call<ApiResponse<CartResponse>> removeFromCart(@Path("bookId") String bookId);
+    Call<ApiResponse<CartResponse>> removeFromCart(@Header("Authorization") String token, @Path("bookId") String bookId);
 
     @POST
-    Call<ResponseBody> postCartDynamic(@Url String url, @Body Map<String, Object> body);
+    Call<ResponseBody> postCartDynamic(@Header("Authorization") String token, @Url String url, @Body Map<String, Object> body);
 
     @POST("api/orders")
-    Call<ApiResponse<Order>> createOrder(@Body Map<String, Object> body);
+    Call<ApiResponse<Order>> createOrder(@Header("Authorization") String token, @Body Map<String, Object> body);
 
     @GET("api/orders")
-    Call<ApiResponse<OrdersResponse>> getOrders();
+    Call<ApiResponse<OrdersResponse>> getOrders(@Header("Authorization") String token);
 
     @GET("api/orders/{id}")
-    Call<ApiResponse<Order>> getOrderDetail(@Path("id") String id);
+    Call<ApiResponse<Order>> getOrderDetail(@Header("Authorization") String token, @Path("id") String id);
 
     @Multipart
     @POST("api/users/avatar")

@@ -109,7 +109,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void loadCart() {
         showProgress(true);
-        Call<ApiResponse<CartResponse>> call = apiService.getCart();
+        Call<ApiResponse<CartResponse>> call = apiService.getCart(prefManager.getAuthHeader());
         call.enqueue(new Callback<ApiResponse<CartResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<CartResponse>> call, Response<ApiResponse<CartResponse>> response) {
@@ -198,7 +198,7 @@ public class CheckoutActivity extends AppCompatActivity {
         body.put("paymentMethod", paymentMethod);
         body.put("notes", "");
 
-        Call<ApiResponse<Order>> call = apiService.createOrder(body);
+        Call<ApiResponse<Order>> call = apiService.createOrder(prefManager.getAuthHeader(), body);
         call.enqueue(new Callback<ApiResponse<Order>>() {
             @Override
             public void onResponse(Call<ApiResponse<Order>> call, Response<ApiResponse<Order>> response) {
@@ -243,4 +243,3 @@ public class CheckoutActivity extends AppCompatActivity {
         btnPlaceOrder.setEnabled(!show);
     }
 }
-

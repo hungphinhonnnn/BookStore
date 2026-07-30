@@ -159,7 +159,9 @@ public class ProfileActivity extends AppCompatActivity {
         // Load avatar
         String avatarUrl = user.getAvatar();
         if (avatarUrl != null && !avatarUrl.isEmpty()) {
-            if (!avatarUrl.startsWith("http")) {
+            if (avatarUrl.startsWith("/")) {
+                avatarUrl = "http://10.0.2.2:3000" + avatarUrl;
+            } else if (!avatarUrl.startsWith("http")) {
                 avatarUrl = "http://10.0.2.2:3000/uploads/" + avatarUrl;
             }
             Glide.with(this)
@@ -201,8 +203,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (avatar != null && !avatar.isEmpty()) {
             String avatarUrl = avatar;
-            if (!avatarUrl.startsWith("http")) {
+            if (avatarUrl.startsWith("/")) {
                 avatarUrl = "http://10.0.2.2:3000" + avatarUrl;
+            } else if (!avatarUrl.startsWith("http")) {
+                avatarUrl = "http://10.0.2.2:3000/uploads/" + avatarUrl;
             }
             Glide.with(this)
                     .load(avatarUrl)

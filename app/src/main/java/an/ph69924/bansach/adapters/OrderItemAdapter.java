@@ -57,7 +57,9 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
 
     private void loadImage(ImageView imageView, String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty() && !imageUrl.startsWith("http")) {
-            imageUrl = "http://10.0.2.2:3000/uploads/" + imageUrl;
+            imageUrl = imageUrl.startsWith("/")
+                    ? "http://10.0.2.2:3000" + imageUrl
+                    : "http://10.0.2.2:3000/uploads/" + imageUrl;
         }
         Glide.with(imageView.getContext())
                 .load(imageUrl)

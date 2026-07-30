@@ -94,8 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
         hideError();
         showProgress(true);
 
-        // Tạm dùng email làm username để tương thích API hiện tại
-        User user = new User(email, password);
+        User user = new User(email, email, firstName, lastName, password);
         Call<ApiResponse<User>> call = apiService.register(user);
 
         call.enqueue(new Callback<ApiResponse<User>>() {

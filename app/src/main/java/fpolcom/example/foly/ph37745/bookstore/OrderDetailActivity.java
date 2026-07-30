@@ -104,7 +104,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void loadOrderDetail() {
         showProgress(true);
-        Call<ApiResponse<Order>> call = apiService.getOrderDetail(orderId);
+        Call<ApiResponse<Order>> call = apiService.getOrderDetail(prefManager.getAuthHeader(), orderId);
         call.enqueue(new Callback<ApiResponse<Order>>() {
             @Override
             public void onResponse(Call<ApiResponse<Order>> call, Response<ApiResponse<Order>> response) {
@@ -204,4 +204,3 @@ public class OrderDetailActivity extends AppCompatActivity {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }
-

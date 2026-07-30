@@ -132,7 +132,9 @@ public class BookDetailActivity extends AppCompatActivity {
         // Load image
         String imageUrl = book.getCoverImage();
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            if (!imageUrl.startsWith("http")) {
+            if (imageUrl.startsWith("/")) {
+                imageUrl = "http://10.0.2.2:3000" + imageUrl;
+            } else if (!imageUrl.startsWith("http")) {
                 imageUrl = "http://10.0.2.2:3000/uploads/" + imageUrl;
             }
             Glide.with(this)
@@ -161,7 +163,7 @@ public class BookDetailActivity extends AppCompatActivity {
         body.put("bookId", currentBook.getId());
         body.put("quantity", 1);
 
-        Call<ApiResponse<CartResponse>> call = apiService.addToCart(body);
+        Call<ApiResponse<CartResponse>> call = apiService.addToCart(prefManager.getAuthHeader(), body);
         call.enqueue(new Callback<ApiResponse<CartResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<CartResponse>> call, Response<ApiResponse<CartResponse>> response) {
@@ -212,7 +214,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void tryFallbackAddToCart(Map<String, Object> body) {
         // Try POST api/cart (common)
-        Call<ResponseBody> alt1 = apiService.postCartDynamic("api/cart", body);
+        Call<ResponseBody> alt1 = apiService.postCartDynamic(prefManager.getAuthHeader(), "api/cart", body);
         alt1.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -222,7 +224,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 }
                 if (response.code() == 404) {
                     // Try without 'api' prefix
-                    Call<ResponseBody> alt2 = apiService.postCartDynamic("cart/add", body);
+                    Call<ResponseBody> alt2 = apiService.postCartDynamic(prefManager.getAuthHeader(), "cart/add", body);
                     alt2.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

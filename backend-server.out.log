@@ -1,0 +1,7 @@
+
+> bookstore-backend@1.0.0 start
+> node src/index.js
+
+MongoDB connected: mongodb://127.0.0.1:27017/bookstore
+BookStore API: http://localhost:3000
+Android emulator: http://10.0.2.2:3000

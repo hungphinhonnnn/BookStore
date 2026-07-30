@@ -13,6 +13,10 @@ public class SharedPreferencesManager {
 
     public void saveToken(String token) { prefs.edit().putString("token", token).apply(); }
     public String getToken() { return prefs.getString("token", null); }
+    public String getAuthHeader() {
+        String token = getToken();
+        return token == null ? null : "Bearer " + token;
+    }
     public boolean isLoggedIn() { return getToken() != null; }
 
     public void saveUserInfo(String id, String username, String role, String avatar) {

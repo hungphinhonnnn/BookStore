@@ -109,7 +109,7 @@ public class CartActivity extends AppCompatActivity {
 
     private void loadCart() {
         showProgress(true);
-        Call<ApiResponse<CartResponse>> call = apiService.getCart();
+        Call<ApiResponse<CartResponse>> call = apiService.getCart(prefManager.getAuthHeader());
         call.enqueue(new Callback<ApiResponse<CartResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<CartResponse>> call, Response<ApiResponse<CartResponse>> response) {
@@ -158,7 +158,7 @@ public class CartActivity extends AppCompatActivity {
         }
         body.put("quantity", newQuantity);
 
-        Call<ApiResponse<CartResponse>> call = apiService.updateCartItem(body);
+        Call<ApiResponse<CartResponse>> call = apiService.updateCartItem(prefManager.getAuthHeader(), body);
         call.enqueue(new Callback<ApiResponse<CartResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<CartResponse>> call, Response<ApiResponse<CartResponse>> response) {
@@ -194,7 +194,7 @@ public class CartActivity extends AppCompatActivity {
     private void removeCartItem(CartItem item) {
         showProgress(true);
         String bookId = item.getBook() != null ? item.getBook().getId() : item.getId();
-        Call<ApiResponse<CartResponse>> call = apiService.removeFromCart(bookId);
+        Call<ApiResponse<CartResponse>> call = apiService.removeFromCart(prefManager.getAuthHeader(), bookId);
         call.enqueue(new Callback<ApiResponse<CartResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<CartResponse>> call, Response<ApiResponse<CartResponse>> response) {
@@ -250,4 +250,3 @@ public class CartActivity extends AppCompatActivity {
         loadCart(); // Reload cart when returning to this activity
     }
 }
-
