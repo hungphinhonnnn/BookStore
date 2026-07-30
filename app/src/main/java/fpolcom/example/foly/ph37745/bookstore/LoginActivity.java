@@ -2,9 +2,11 @@ package fpolcom.example.foly.ph37745.bookstore;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText edtUsername, edtPassword;
+    private ImageView imgTogglePassword;
     private Button btnLogin;
     private TextView tvError, tvForgotPassword, tvGoToSignUp;
     private ProgressBar progressBar;
@@ -50,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private void initViews() {
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
+        imgTogglePassword = findViewById(R.id.imgTogglePassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvError = findViewById(R.id.tvError);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
@@ -59,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> performLogin());
+        imgTogglePassword.setOnClickListener(v -> togglePasswordVisibility());
         if (tvGoToSignUp != null) {
             tvGoToSignUp.setOnClickListener(v -> {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
@@ -68,6 +73,14 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: Implement forgot password
             Toast.makeText(this, "Tính năng quên mật khẩu sẽ được thêm sau", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void togglePasswordVisibility() {
+        int selection = edtPassword.getSelectionStart();
+        boolean hidden = (edtPassword.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) == InputType.TYPE_TEXT_VARIATION_PASSWORD;
+        int variation = hidden ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
+        edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | variation);
+        edtPassword.setSelection(Math.max(0, selection));
     }
 
     private void performLogin() {

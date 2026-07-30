@@ -29,6 +29,7 @@ import an.ph69924.bansach.models.Book;
 import an.ph69924.bansach.models.BooksResponse;
 import an.ph69924.bansach.models.CategoriesResponse;
 import an.ph69924.bansach.models.Category;
+import an.ph69924.bansach.utils.FavoriteManager;
 import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +46,7 @@ public class BookListActivity extends AppCompatActivity {
     private TextView tvEmpty;
     private ApiService apiService;
     private SharedPreferencesManager prefManager;
+    private FavoriteManager favoriteManager;
     private List<Book> allBooks = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
     private String selectedCategoryId = null;
@@ -57,6 +59,7 @@ public class BookListActivity extends AppCompatActivity {
 
         apiService = RetrofitClient.getInstance().getApiService();
         prefManager = new SharedPreferencesManager(this);
+        favoriteManager = new FavoriteManager(this);
 
         if (!prefManager.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -82,11 +85,24 @@ public class BookListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        bookAdapter = new BookAdapter(allBooks, book -> {
-            Intent intent = new Intent(BookListActivity.this, BookDetailActivity.class);
-            intent.putExtra("book_id", book.getId());
-            startActivity(intent);
-        });
+        bookAdapter = new BookAdapter(
+                allBooks,
+                book -> {
+                    Intent intent = new Intent(BookListActivity.this, BookDetailActivity.class);
+                    intent.putExtra("book_id", book.getId());
+                    startActivity(intent);
+                },
+                book -> favoriteManager.isFavorite(book.getId()),
+                book -> {
+                    boolean favorite = favoriteManager.toggleFavorite(book.getId());
+                    bookAdapter.refreshFavoriteStates();
+                    Toast.makeText(
+                            this,
+                            favorite ? "Đã thêm vào yêu thích" : "Đã bỏ khỏi yêu thích",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+        );
         recyclerViewBooks.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerViewBooks.setAdapter(bookAdapter);
     }
@@ -124,8 +140,8 @@ public class BookListActivity extends AppCompatActivity {
             if (itemId == R.id.nav_home) {
                 clearFilters();
                 return true;
-            } else if (itemId == R.id.nav_category) {
-                clearFilters();
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoriteBooksActivity.class));
                 return true;
             } else if (itemId == R.id.nav_cart) {
                 startActivity(new Intent(this, CartActivity.class));
@@ -136,6 +152,14 @@ public class BookListActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bookAdapter != null) {
+            bookAdapter.refreshFavoriteStates();
+        }
     }
 
     private void loadCategories() {

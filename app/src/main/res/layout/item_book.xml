@@ -15,13 +15,30 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <ImageView
-            android:id="@+id/imgBookCover"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="190dp"
-            android:background="@drawable/bg_cover_placeholder"
-            android:contentDescription="Book cover"
-            android:scaleType="centerCrop" />
+            android:layout_height="190dp">
+
+            <ImageView
+                android:id="@+id/imgBookCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_cover_placeholder"
+                android:contentDescription="Book cover"
+                android:scaleType="centerCrop" />
+
+            <ImageButton
+                android:id="@+id/btnFavorite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:background="@drawable/bg_favorite_button"
+                android:contentDescription="Yêu thích"
+                android:padding="8dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_heart_24" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvTitle"

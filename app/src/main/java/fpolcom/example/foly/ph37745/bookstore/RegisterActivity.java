@@ -2,9 +2,11 @@ package fpolcom.example.foly.ph37745.bookstore;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText edtFirstName, edtLastName, edtEmail, edtPassword;
+    private ImageView imgTogglePassword;
     private Button btnRegister;
     private TextView tvError, tvGoToLogin;
     private ProgressBar progressBar;
@@ -44,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         edtLastName = findViewById(R.id.edtLastName);
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
+        imgTogglePassword = findViewById(R.id.imgTogglePassword);
         btnRegister = findViewById(R.id.btnRegister);
         tvGoToLogin = findViewById(R.id.tvGoToLogin);
         tvError = findViewById(R.id.tvError);
@@ -52,12 +56,21 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnRegister.setOnClickListener(v -> performRegister());
+        imgTogglePassword.setOnClickListener(v -> togglePasswordVisibility());
         if (tvGoToLogin != null) {
             tvGoToLogin.setOnClickListener(v -> {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 finish();
             });
         }
+    }
+
+    private void togglePasswordVisibility() {
+        int selection = edtPassword.getSelectionStart();
+        boolean hidden = (edtPassword.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) == InputType.TYPE_TEXT_VARIATION_PASSWORD;
+        int variation = hidden ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
+        edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | variation);
+        edtPassword.setSelection(Math.max(0, selection));
     }
 
     private void performRegister() {

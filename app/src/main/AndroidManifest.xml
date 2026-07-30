@@ -39,6 +39,9 @@
             android:name=".BookListActivity"
             android:exported="false" />
         <activity
+            android:name=".FavoriteBooksActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookDetailActivity"
             android:exported="false" />
         <activity

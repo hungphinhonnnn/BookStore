@@ -14,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +62,7 @@ public class CartActivity extends AppCompatActivity {
 
         initViews();
         setupToolbar();
+        setupBottomNavigation();
         setupRecyclerView();
         loadCart();
     }
@@ -89,6 +92,29 @@ public class CartActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.nav_cart);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                Intent intent = new Intent(this, BookListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoriteBooksActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_cart) {
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(this, ProfileActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
 
     private void setupRecyclerView() {

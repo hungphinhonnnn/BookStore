@@ -23,12 +23,33 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         void onBookClick(Book book);
     }
 
+    public interface FavoriteStateProvider {
+        boolean isFavorite(Book book);
+    }
+
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(Book book);
+    }
+
     private List<Book> books;
     private final OnBookClickListener listener;
+    private final FavoriteStateProvider favoriteStateProvider;
+    private final OnFavoriteClickListener favoriteClickListener;
 
     public BookAdapter(List<Book> books, OnBookClickListener listener) {
+        this(books, listener, null, null);
+    }
+
+    public BookAdapter(
+            List<Book> books,
+            OnBookClickListener listener,
+            FavoriteStateProvider favoriteStateProvider,
+            OnFavoriteClickListener favoriteClickListener
+    ) {
         this.books = books != null ? books : new ArrayList<>();
         this.listener = listener;
+        this.favoriteStateProvider = favoriteStateProvider;
+        this.favoriteClickListener = favoriteClickListener;
     }
 
     @NonNull
@@ -46,6 +67,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.tvPrice.setText(PriceFormatter.formatVnd(book.getPrice()));
         holder.tvCategory.setText(book.getCategory() != null ? book.getCategory().getName() : "Khong phan loai");
         loadImage(holder.imgBookCover, book.getCoverImage());
+        bindFavorite(holder, book);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onBookClick(book);
         });
@@ -59,6 +81,22 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void updateBooks(List<Book> books) {
         this.books = books != null ? books : new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public void refreshFavoriteStates() {
+        notifyDataSetChanged();
+    }
+
+    private void bindFavorite(BookViewHolder holder, Book book) {
+        if (favoriteStateProvider == null || favoriteClickListener == null) {
+            holder.btnFavorite.setVisibility(View.GONE);
+            return;
+        }
+
+        holder.btnFavorite.setVisibility(View.VISIBLE);
+        boolean favorite = favoriteStateProvider.isFavorite(book);
+        holder.btnFavorite.setImageResource(favorite ? R.drawable.ic_heart_filled_24 : R.drawable.ic_heart_24);
+        holder.btnFavorite.setOnClickListener(v -> favoriteClickListener.onFavoriteClick(book));
     }
 
     private void loadImage(ImageView imageView, String imageUrl) {
@@ -76,11 +114,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     static class BookViewHolder extends RecyclerView.ViewHolder {
         ImageView imgBookCover;
+        ImageView btnFavorite;
         TextView tvTitle, tvAuthor, tvCategory, tvPrice;
 
         BookViewHolder(@NonNull View itemView) {
             super(itemView);
             imgBookCover = itemView.findViewById(R.id.imgBookCover);
+            btnFavorite = itemView.findViewById(R.id.btnFavorite);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAuthor = itemView.findViewById(R.id.tvAuthor);
             tvCategory = itemView.findViewById(R.id.tvCategory);

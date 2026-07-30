@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         initViews();
         setupToolbar();
+        setupBottomNavigation();
         setupImagePicker();
         loadProfile();
         setupLogout();
@@ -100,6 +102,29 @@ public class ProfileActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.nav_profile);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                Intent intent = new Intent(this, BookListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoriteBooksActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_cart) {
+                startActivity(new Intent(this, CartActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                return true;
+            }
+            return false;
+        });
     }
 
     private void loadProfile() {
