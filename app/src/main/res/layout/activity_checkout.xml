@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/appBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="?attr/colorPrimary"
+                android:background="@drawable/bg_toolbar_gradient"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="Thanh toán"
                 app:titleTextColor="#FFFFFF" />
@@ -40,21 +40,34 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thông tin giao hàng"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#333"
-                    android:layout_marginBottom="16dp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bg_button_gradient" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Thông tin giao hàng"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary" />
+                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:hint="Họ và tên"
-                    app:boxStrokeColor="#4CAF50">
+                    app:boxStrokeColor="@color/colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtFullName"
@@ -69,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:hint="Số điện thoại"
-                    app:boxStrokeColor="#4CAF50">
+                    app:boxStrokeColor="@color/colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtPhone"
@@ -84,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:hint="Địa chỉ giao hàng"
-                    app:boxStrokeColor="#4CAF50">
+                    app:boxStrokeColor="@color/colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtAddress"
@@ -115,14 +128,27 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phương thức thanh toán"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#333"
-                    android:layout_marginBottom="16dp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bg_button_gradient" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Phương thức thanh toán"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary" />
+                </LinearLayout>
 
                 <RadioGroup
                     android:id="@+id/radioGroupPayment"
@@ -179,14 +205,27 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tóm tắt đơn hàng"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#333"
-                    android:layout_marginBottom="12dp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bg_button_gradient" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Tóm tắt đơn hàng"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvItemCount"
@@ -216,7 +255,7 @@
                         android:layout_weight="1"
                         android:text="Tạm tính:"
                         android:textSize="16sp"
-                        android:textColor="#666" />
+                        android:textColor="@color/textSecondary" />
 
                     <TextView
                         android:id="@+id/tvSubtotal"
@@ -224,7 +263,7 @@
                         android:layout_height="wrap_content"
                         android:text="0 đ"
                         android:textSize="16sp"
-                        android:textColor="#333" />
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
 
@@ -241,7 +280,7 @@
                         android:layout_weight="1"
                         android:text="Phí vận chuyển:"
                         android:textSize="16sp"
-                        android:textColor="#666" />
+                        android:textColor="@color/textSecondary" />
 
                     <TextView
                         android:id="@+id/tvShippingFee"
@@ -249,7 +288,7 @@
                         android:layout_height="wrap_content"
                         android:text="30,000 đ"
                         android:textSize="16sp"
-                        android:textColor="#333" />
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
 
@@ -272,7 +311,7 @@
                         android:text="Tổng tiền:"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="#333" />
+                        android:textColor="@color/textPrimary" />
 
                     <TextView
                         android:id="@+id/tvTotalAmount"
@@ -281,7 +320,7 @@
                         android:text="0 đ"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textColor="@color/priceAccent" />
 
                 </LinearLayout>
 
@@ -289,18 +328,18 @@
 
         </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/btnPlaceOrder"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Đặt hàng"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:background="#4CAF50" />
+            <Button
+                android:id="@+id/btnPlaceOrder"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="Đặt hàng"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_button_gradient" />
 
         <ProgressBar
             android:id="@+id/progressBar"

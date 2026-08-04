@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="#FFFFFF">
+    android:background="@drawable/bg_auth_background">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,21 +24,30 @@
             android:padding="24dp">
 
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/ic_book_logo"
-                android:tint="@color/colorPrimary"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="24dp" />
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_bookstore"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="create account"
-                android:textSize="24sp"
+                android:text="Tạo tài khoản"
+                android:textSize="26sp"
                 android:textStyle="bold"
-                android:textColor="#2C2C2C"
-                android:layout_marginBottom="32dp" />
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tham gia BookStore ngay hôm nay"
+                android:textSize="14sp"
+                android:textColor="@color/textSecondary"
+                android:layout_marginBottom="28dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,14 +56,16 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="8dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="14dp">
 
                 <EditText
                     android:id="@+id/edtFirstName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="First name"
+                    android:hint="Họ"
+                    android:textColor="@color/textPrimary"
+                    android:textColorHint="@color/textMuted"
                     android:background="@android:color/transparent"
                     android:inputType="textPersonName"
                     android:padding="0dp" />
@@ -71,14 +83,16 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="8dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="14dp">
 
                 <EditText
                     android:id="@+id/edtLastName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Last name"
+                    android:hint="Tên"
+                    android:textColor="@color/textPrimary"
+                    android:textColorHint="@color/textMuted"
                     android:background="@android:color/transparent"
                     android:inputType="textPersonName"
                     android:padding="0dp" />
@@ -96,14 +110,16 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="8dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="14dp">
 
                 <EditText
                     android:id="@+id/edtEmail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="e-mail"
+                    android:hint="Email"
+                    android:textColor="@color/textPrimary"
+                    android:textColorHint="@color/textMuted"
                     android:background="@android:color/transparent"
                     android:inputType="textEmailAddress"
                     android:padding="0dp" />
@@ -121,14 +137,16 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="12dp"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="24dp">
 
                 <EditText
                     android:id="@+id/edtPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Password"
+                    android:hint="Mật khẩu"
+                    android:textColor="@color/textPrimary"
+                    android:textColorHint="@color/textMuted"
                     android:background="@android:color/transparent"
                     android:inputType="textPassword"
                     android:padding="0dp" />
@@ -145,41 +163,46 @@
             <Button
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="create account"
-                android:textSize="16sp"
+                android:layout_height="56dp"
+                android:text="Đăng ký"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_button_primary" />
+                android:background="@drawable/bg_button_gradient"
+                android:layout_marginBottom="16dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Already have an account  ? "
-                    android:textColor="#666" />
+                    android:text="Đã có tài khoản?"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvGoToLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Log in"
+                    android:text="Đăng nhập"
                     android:textColor="@color/colorAccent"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#F44336"
+                android:textColor="@color/danger"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:layout_marginTop="16dp"

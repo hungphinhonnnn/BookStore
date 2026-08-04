@@ -47,6 +47,7 @@ import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PERMISSION = 100;
+    private static final int REQ_LOGIN = 1001;
     private ImageView imgAvatar;
     private TextView tvUsername, tvRole, tvRoleDetail;
     private com.google.android.material.textfield.TextInputEditText edtUsername;
@@ -65,21 +66,38 @@ public class ProfileActivity extends AppCompatActivity {
         apiService = RetrofitClient.getInstance().getApiService();
         prefManager = new SharedPreferencesManager(this);
 
+        // Đăng ký sớm để tránh lỗi registerForActivityResult khi đã RESUMED
+        setupImagePicker();
+
         // Kiểm tra đăng nhập
         if (!prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            startActivityForResult(new Intent(this, LoginActivity.class), REQ_LOGIN);
             return;
         }
 
+        setupContent();
+    }
+
+    private void setupContent() {
         initViews();
         setupToolbar();
         setupBottomNavigation();
-        setupImagePicker();
         loadProfile();
         setupLogout();
         setupChangeAvatar();
         setupOrders();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                setupContent();
+            } else {
+                finish();
+            }
+        }
     }
 
     private void initViews() {

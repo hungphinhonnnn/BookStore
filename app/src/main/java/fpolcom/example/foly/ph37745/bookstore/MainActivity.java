@@ -7,8 +7,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import an.ph69924.bansach.utils.SharedPreferencesManager;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -16,28 +14,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Nếu đã đăng nhập, có thể điều hướng thẳng vào danh sách sách
-        SharedPreferencesManager prefManager = new SharedPreferencesManager(this);
-        if (prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, BookListActivity.class));
-            finish();
-            return;
-        }
-
-        Button btnCreate = findViewById(R.id.btnCreateAccount);
-        Button btnLogin = findViewById(R.id.btnLogin);
-
-        if (btnCreate != null) {
-            btnCreate.setOnClickListener(new View.OnClickListener() {
+        Button btnExplore = findViewById(R.id.btnExplore);
+        if (btnExplore != null) {
+            btnExplore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                    startActivity(new Intent(MainActivity.this, BookListActivity.class));
                 }
             });
         }
 
-        if (btnLogin != null) {
-            btnLogin.setOnClickListener(new View.OnClickListener() {
+        View btnLoginLink = findViewById(R.id.btnLoginLink);
+        if (btnLoginLink != null) {
+            btnLoginLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));

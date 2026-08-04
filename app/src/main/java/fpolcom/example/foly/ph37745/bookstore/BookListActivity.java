@@ -2,11 +2,10 @@ package fpolcom.example.foly.ph37745.bookstore;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,7 +29,6 @@ import an.ph69924.bansach.models.BooksResponse;
 import an.ph69924.bansach.models.CategoriesResponse;
 import an.ph69924.bansach.models.Category;
 import an.ph69924.bansach.utils.FavoriteManager;
-import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +43,6 @@ public class BookListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tvEmpty;
     private ApiService apiService;
-    private SharedPreferencesManager prefManager;
     private FavoriteManager favoriteManager;
     private List<Book> allBooks = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
@@ -58,14 +55,7 @@ public class BookListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
         apiService = RetrofitClient.getInstance().getApiService();
-        prefManager = new SharedPreferencesManager(this);
         favoriteManager = new FavoriteManager(this);
-
-        if (!prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
 
         initViews();
         setupRecyclerView();
@@ -108,28 +98,32 @@ public class BookListActivity extends AppCompatActivity {
     }
 
     private void setupSearch() {
-        edtSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        View.OnClickListener openSearch = v -> startSearch();
+        findViewById(R.id.searchContainer).setOnClickListener(openSearch);
+        findViewById(R.id.imgSearchHome).setOnClickListener(openSearch);
+        edtSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                startSearch();
+                return true;
             }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchQuery = s.toString().trim();
-                filterBooks();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+            return false;
         });
+    }
+
+    private void startSearch() {
+        Intent intent = new Intent(BookListActivity.this, SearchActivity.class);
+        String query = edtSearch.getText().toString().trim();
+        if (!query.isEmpty()) {
+            intent.putExtra("query", query);
+        }
+        startActivity(intent);
     }
 
     private void setupActions() {
         findViewById(R.id.btnCart).setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
         findViewById(R.id.btnProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
-        findViewById(R.id.btnOrders).setOnClickListener(v -> startActivity(new Intent(this, OrderHistoryActivity.class)));
-        findViewById(R.id.btnExplore).setOnClickListener(v -> clearFilters());
+        findViewById(R.id.btnExplore).setOnClickListener(v ->
+                startActivity(new Intent(this, SeasonalBooksActivity.class)));
         findViewById(R.id.btnAllCategories).setOnClickListener(v -> clearFilters());
         findViewById(R.id.btnExploreAll).setOnClickListener(v -> clearFilters());
 

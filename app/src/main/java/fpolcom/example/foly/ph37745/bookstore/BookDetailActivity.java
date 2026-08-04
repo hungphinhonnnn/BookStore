@@ -1,5 +1,6 @@
 package fpolcom.example.foly.ph37745.bookstore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BookDetailActivity extends AppCompatActivity {
+    private static final int REQ_LOGIN = 1001;
     private ImageView imgBookCover;
     private TextView tvTitle, tvAuthor, tvCategory, tvPrice, tvDescription;
     private ProgressBar progressBar;
@@ -68,12 +70,17 @@ public class BookDetailActivity extends AppCompatActivity {
         tvDescription = findViewById(R.id.tvDescription);
         progressBar = findViewById(R.id.progressBar);
         btnAddToCart = findViewById(R.id.btnAddToCart);
+        TextView btnReadSample = findViewById(R.id.btnReadSample);
 
         btnAddToCart.setOnClickListener(v -> {
             if (currentBook != null) {
                 addToCart();
             }
         });
+
+        // TODO: bạn thay phần xử lý ở đây khi làm tính năng đọc thử
+        btnReadSample.setOnClickListener(v ->
+                Toast.makeText(this, "Tính năng đọc thử đang phát triển", Toast.LENGTH_SHORT).show());
     }
 
     private void setupToolbar() {
@@ -144,17 +151,14 @@ public class BookDetailActivity extends AppCompatActivity {
                     .into(imgBookCover);
         }
 
-        // Check if user is logged in to show add to cart button
-        if (prefManager.isLoggedIn()) {
-            btnAddToCart.setVisibility(View.VISIBLE);
-        } else {
-            btnAddToCart.setVisibility(View.GONE);
-        }
+        // Hiện nút thêm giỏ hàng cho cả khách chưa đăng nhập
+        btnAddToCart.setVisibility(View.VISIBLE);
     }
 
     private void addToCart() {
         if (!prefManager.isLoggedIn()) {
             Toast.makeText(this, "Vui lòng đăng nhập để thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(this, LoginActivity.class), REQ_LOGIN);
             return;
         }
 
@@ -258,6 +262,14 @@ public class BookDetailActivity extends AppCompatActivity {
                 Log.e("BookDetailActivity", msg, t);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_LOGIN && resultCode == RESULT_OK && currentBook != null) {
+            addToCart();
+        }
     }
 
     private void showProgress(boolean show) {

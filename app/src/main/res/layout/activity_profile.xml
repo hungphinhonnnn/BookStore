@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/appBackground">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="?attr/colorPrimary"
+                android:background="@drawable/bg_toolbar_gradient"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="Thông tin cá nhân"
                 app:titleTextColor="#FFFFFF" />
@@ -42,16 +42,24 @@
             android:background="#FFFFFF"
             android:layout_marginBottom="16dp">
 
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:scaleType="centerCrop"
-                android:background="#E0E0E0"
-                android:contentDescription="Avatar"
+            <FrameLayout
+                android:layout_width="128dp"
+                android:layout_height="128dp"
                 android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_avatar_ring"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless">
+
+                <ImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:background="#E0E0E0"
+                    android:contentDescription="Avatar" />
+            </FrameLayout>
 
             <Button
                 android:id="@+id/btnChangeAvatar"
@@ -73,7 +81,7 @@
                 android:text="Username"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#333"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -81,11 +89,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Role"
-                android:textSize="16sp"
-                android:textColor="#666"
-                android:background="#E3F2FD"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/bg_info_pill"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp" />
 
@@ -98,14 +106,27 @@
             android:padding="16dp"
             android:background="#FFFFFF">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thông tin tài khoản"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#333"
-                android:layout_marginBottom="16dp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_button_gradient" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Thông tin tài khoản"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/textPrimary" />
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -127,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:text="Vai trò"
                 android:textSize="14sp"
-                android:textColor="#666"
+                android:textColor="@color/textSecondary"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -136,9 +157,9 @@
                 android:layout_height="wrap_content"
                 android:text="Customer"
                 android:textSize="16sp"
-                android:textColor="#333"
+                android:textColor="@color/textPrimary"
                 android:padding="12dp"
-                android:background="#F5F5F5"
+                android:background="@color/appBackground"
                 android:layout_marginBottom="16dp" />
 
             <Button

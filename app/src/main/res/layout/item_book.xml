@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="7dp"
+    android:layout_margin="2dp"
     app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Title"
-            android:textColor="#20242B"
+            android:textColor="@color/textPrimary"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Author"
-            android:textColor="#5E6470"
+            android:textColor="@color/textSecondary"
             android:textSize="15sp" />
 
         <TextView
@@ -72,7 +72,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Category"
-            android:textColor="#075BD8"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="0 ₫"
-            android:textColor="#C45500"
+            android:textColor="@color/priceAccent"
             android:textSize="17sp"
             android:textStyle="bold" />
 

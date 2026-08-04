@@ -23,6 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int REQ_REGISTER = 2001;
     private EditText edtUsername, edtPassword;
     private ImageView imgTogglePassword;
     private Button btnLogin;
@@ -39,9 +40,9 @@ public class LoginActivity extends AppCompatActivity {
         apiService = RetrofitClient.getInstance().getApiService();
         prefManager = new SharedPreferencesManager(this);
 
-        // Nếu đã đăng nhập, chuyển đến BookListActivity
+        // Nếu đã đăng nhập, đóng lại để trở về màn hình gọi
         if (prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, BookListActivity.class));
+            setResult(RESULT_OK);
             finish();
             return;
         }
@@ -66,13 +67,23 @@ public class LoginActivity extends AppCompatActivity {
         imgTogglePassword.setOnClickListener(v -> togglePasswordVisibility());
         if (tvGoToSignUp != null) {
             tvGoToSignUp.setOnClickListener(v -> {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                startActivityForResult(new Intent(LoginActivity.this, RegisterActivity.class), REQ_REGISTER);
             });
         }
         tvForgotPassword.setOnClickListener(v -> {
             // TODO: Implement forgot password
             Toast.makeText(this, "Tính năng quên mật khẩu sẽ được thêm sau", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_REGISTER && resultCode == RESULT_OK) {
+            // Đăng ký thành công → truyền tiếp về màn hình gọi
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     private void togglePasswordVisibility() {
@@ -125,9 +136,9 @@ public class LoginActivity extends AppCompatActivity {
                                 user.getAvatar() != null ? user.getAvatar() : ""
                         );
 
-                        // Chuyển đến BookListActivity
+                        // Trả kết quả thành công về màn hình gọi
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, BookListActivity.class));
+                        setResult(RESULT_OK);
                         finish();
                     } else {
                         showError("Đăng nhập thất bại. Vui lòng thử lại.");

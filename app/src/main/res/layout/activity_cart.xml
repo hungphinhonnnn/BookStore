@@ -4,21 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/appBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="Giỏ hàng"
-            app:titleTextColor="#FFFFFF" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_toolbar_gradient"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:title="Giỏ hàng"
+                app:titleTextColor="#FFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,7 +36,7 @@
         android:layout_weight="1"
         android:text="Giỏ hàng trống"
         android:textSize="18sp"
-        android:textColor="#999"
+        android:textColor="@color/textMuted"
         android:gravity="center"
         android:visibility="gone" />
 
@@ -56,6 +56,15 @@
         android:elevation="8dp"
         android:padding="16dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tổng đơn"
+            android:textSize="13sp"
+            android:textColor="@color/textMuted"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +79,7 @@
                 android:text="Tổng tiền:"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#333" />
+                android:textColor="@color/textPrimary" />
 
             <TextView
                 android:id="@+id/tvTotalAmount"
@@ -79,7 +88,7 @@
                 android:text="0 đ"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#F44336" />
+                android:textColor="@color/priceAccent" />
 
         </LinearLayout>
 
@@ -91,7 +100,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:background="#4CAF50"
+            android:background="@drawable/bg_button_gradient"
             android:enabled="false" />
 
     </LinearLayout>

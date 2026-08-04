@@ -1,5 +1,6 @@
 package fpolcom.example.foly.ph37745.bookstore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
     private static final String TAG = "OrderDetailActivity";
+    private static final int REQ_LOGIN = 1001;
     private TextView tvOrderId, tvStatus, tvCreatedAt, tvPaymentMethod;
     private TextView tvShippingAddress, tvPhone;
     private TextView tvSubtotal, tvShippingFee, tvTotalAmount;
@@ -62,14 +64,30 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         // Kiểm tra đăng nhập
         if (!prefManager.isLoggedIn()) {
-            finish();
+            startActivityForResult(new Intent(this, LoginActivity.class), REQ_LOGIN);
             return;
         }
 
+        setupContent();
+    }
+
+    private void setupContent() {
         initViews();
         setupToolbar();
         setupRecyclerView();
         loadOrderDetail();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                setupContent();
+            } else {
+                finish();
+            }
+        }
     }
 
     private void initViews() {

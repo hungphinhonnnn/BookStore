@@ -33,6 +33,7 @@ import retrofit2.Response;
 
 public class CheckoutActivity extends AppCompatActivity {
     private static final String TAG = "CheckoutActivity";
+    private static final int REQ_LOGIN = 1001;
     private TextInputEditText edtFullName, edtPhone, edtAddress;
     private RadioGroup radioGroupPayment;
     private RadioButton radioCoin, radioCash;
@@ -57,16 +58,31 @@ public class CheckoutActivity extends AppCompatActivity {
 
         // Kiểm tra đăng nhập
         if (!prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            startActivityForResult(new Intent(this, LoginActivity.class), REQ_LOGIN);
             return;
         }
 
+        setupContent();
+    }
+
+    private void setupContent() {
         initViews();
         setupToolbar();
         loadCart();
         loadUserProfile();
         setupPaymentMethod();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                setupContent();
+            } else {
+                finish();
+            }
+        }
     }
 
     private void initViews() {

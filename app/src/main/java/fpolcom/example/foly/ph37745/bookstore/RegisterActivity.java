@@ -127,9 +127,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 user.getAvatar() != null ? user.getAvatar() : ""
                         );
 
-                        // Chuyển đến BookListActivity
+                        // Trả kết quả thành công về màn hình gọi
                         android.widget.Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", android.widget.Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, BookListActivity.class));
+                        setResult(RESULT_OK);
                         finish();
                     } else {
                         showError("Đăng ký thất bại. Vui lòng thử lại.");

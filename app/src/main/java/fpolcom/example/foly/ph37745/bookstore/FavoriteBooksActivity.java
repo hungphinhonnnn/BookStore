@@ -23,7 +23,6 @@ import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.Book;
 import an.ph69924.bansach.models.BooksResponse;
 import an.ph69924.bansach.utils.FavoriteManager;
-import an.ph69924.bansach.utils.SharedPreferencesManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +34,6 @@ public class FavoriteBooksActivity extends AppCompatActivity {
     private BookAdapter bookAdapter;
     private ApiService apiService;
     private FavoriteManager favoriteManager;
-    private SharedPreferencesManager prefManager;
     private List<Book> allBooks = new ArrayList<>();
 
     @Override
@@ -45,13 +43,6 @@ public class FavoriteBooksActivity extends AppCompatActivity {
 
         apiService = RetrofitClient.getInstance().getApiService();
         favoriteManager = new FavoriteManager(this);
-        prefManager = new SharedPreferencesManager(this);
-
-        if (!prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
 
         initViews();
         setupRecyclerView();

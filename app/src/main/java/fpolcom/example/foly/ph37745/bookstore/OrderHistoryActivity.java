@@ -28,6 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderHistoryActivity extends AppCompatActivity {
+    private static final int REQ_LOGIN = 1001;
     private static final String TAG = "OrderHistoryActivity";
     private RecyclerView recyclerViewOrders;
     private OrderAdapter orderAdapter;
@@ -47,15 +48,30 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
         // Kiểm tra đăng nhập
         if (!prefManager.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            startActivityForResult(new Intent(this, LoginActivity.class), REQ_LOGIN);
             return;
         }
 
+        setupContent();
+    }
+
+    private void setupContent() {
         initViews();
         setupToolbar();
         setupRecyclerView();
         loadOrders();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                setupContent();
+            } else {
+                finish();
+            }
+        }
     }
 
     private void initViews() {
