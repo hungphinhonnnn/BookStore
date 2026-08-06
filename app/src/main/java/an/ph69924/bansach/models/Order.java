@@ -13,6 +13,8 @@ public class Order {
     private String phone;
     private double totalAmount;
     private List<OrderItem> items;
+    private double discountAmount;
+    private String discountCode;
 
     public String getId() { return id != null ? id : _id; }
     public void setId(String id) { this.id = id; }
@@ -40,4 +42,8 @@ public class Order {
     public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }
+    public double getDiscountAmount() { return discountAmount; }
+    public void setDiscountAmount(double discountAmount) { this.discountAmount = discountAmount; }
+    public String getDiscountCode() { return discountCode; }
+    public void setDiscountCode(String discountCode) { this.discountCode = discountCode; }
 }

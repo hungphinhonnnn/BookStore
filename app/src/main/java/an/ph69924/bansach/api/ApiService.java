@@ -12,6 +12,7 @@ import an.ph69924.bansach.models.CategoriesResponse;
 import an.ph69924.bansach.models.Order;
 import an.ph69924.bansach.models.OrdersResponse;
 import an.ph69924.bansach.models.User;
+import an.ph69924.bansach.models.VouchersResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -71,6 +72,9 @@ public interface ApiService {
 
     @GET("api/orders/{id}")
     Call<ApiResponse<Order>> getOrderDetail(@Header("Authorization") String token, @Path("id") String id);
+
+    @GET("api/vouchers")
+    Call<ApiResponse<VouchersResponse>> getVouchers();
 
     @Multipart
     @POST("api/users/avatar")

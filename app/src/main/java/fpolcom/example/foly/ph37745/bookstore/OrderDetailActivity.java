@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -206,12 +207,23 @@ public class OrderDetailActivity extends AppCompatActivity {
             }
             
             double total = order.getTotalAmount();
+            double discount = order.getDiscountAmount();
+            
+            tvSubtotal.setText(PriceFormatter.formatVnd(subtotal));
+            
+            LinearLayout layoutDiscount = findViewById(R.id.layoutDiscount);
+            TextView tvDiscountAmount = findViewById(R.id.tvDiscountAmount);
+            if (discount > 0) {
+                layoutDiscount.setVisibility(View.VISIBLE);
+                tvDiscountAmount.setText("-" + PriceFormatter.formatVnd(discount));
+            } else {
+                layoutDiscount.setVisibility(View.GONE);
+            }
+            
             if (total > 0) {
                 tvTotalAmount.setText(PriceFormatter.formatVnd(total));
-                tvSubtotal.setText(PriceFormatter.formatVnd(total - shippingFee));
             } else {
-                tvSubtotal.setText(PriceFormatter.formatVnd(subtotal));
-                tvTotalAmount.setText(PriceFormatter.formatVnd(subtotal + shippingFee));
+                tvTotalAmount.setText(PriceFormatter.formatVnd(subtotal - discount + shippingFee));
             }
         }
         

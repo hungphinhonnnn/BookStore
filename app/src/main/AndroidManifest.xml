@@ -60,6 +60,9 @@
             android:name=".CheckoutActivity"
             android:exported="false" />
         <activity
+            android:name=".VoucherListActivity"
+            android:exported="false" />
+        <activity
             android:name=".OrderHistoryActivity"
             android:exported="false" />
         <activity
