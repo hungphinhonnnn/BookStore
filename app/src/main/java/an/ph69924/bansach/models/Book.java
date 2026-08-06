@@ -9,6 +9,7 @@ public class Book {
     private String coverImage;
     private String image;
     private double price;
+    private int stock;
     private Category category;
 
     public String getId() { return id != null ? id : _id; }
@@ -27,6 +28,8 @@ public class Book {
     public void setImage(String image) { this.image = image; }
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
 }
