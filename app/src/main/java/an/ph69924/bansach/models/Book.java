@@ -1,5 +1,7 @@
 package an.ph69924.bansach.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Book {
     private String id;
     private String _id;
@@ -11,6 +13,9 @@ public class Book {
     private double price;
     private int stock;
     private Category category;
+    
+    @SerializedName("preview")
+    private String preview; // Khớp với trường 'preview' trong schema Backend
 
     public String getId() { return id != null ? id : _id; }
     public void setId(String id) { this.id = id; }
@@ -32,4 +37,7 @@ public class Book {
     public void setStock(int stock) { this.stock = stock; }
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
+    
+    public String getPreview() { return preview; }
+    public void setPreview(String preview) { this.preview = preview; }
 }

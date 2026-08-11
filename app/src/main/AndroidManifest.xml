@@ -30,6 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- Đăng ký PreviewActivity -->
+        <activity
+            android:name="fpolcom.example.foly.ph37745.bookstore.PreviewActivity"
+            android:exported="false"
+            android:label="Đọc thử sách" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="false" />

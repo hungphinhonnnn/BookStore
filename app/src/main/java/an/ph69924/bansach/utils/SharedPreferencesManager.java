@@ -28,6 +28,7 @@ public class SharedPreferencesManager {
                 .apply();
     }
 
+    public String getUserId() { return prefs.getString("user_id", null); }
     public String getUsername() { return prefs.getString("username", null); }
     public String getRole() { return prefs.getString("role", null); }
     public String getAvatar() { return prefs.getString("avatar", null); }
