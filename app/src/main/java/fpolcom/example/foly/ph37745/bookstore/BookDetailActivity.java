@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import an.ph69924.bansach.api.ApiService;
 import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.ApiResponse;
@@ -193,12 +192,6 @@ public class BookDetailActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Fallbacks for common backend routes if first path 404
-                if (response.code() == 404) {
-                    tryFallbackAddToCart(body);
-                    return;
-                }
-
                 Log.e("BookDetailActivity", "Add to cart failed: " + errorMsg);
                 Toast.makeText(BookDetailActivity.this, errorMsg, Toast.LENGTH_LONG).show();
             }
@@ -208,54 +201,6 @@ public class BookDetailActivity extends AppCompatActivity {
                 btnAddToCart.setEnabled(true);
                 Log.e("BookDetailActivity", "Add to cart error: " + t.getMessage(), t);
                 Toast.makeText(BookDetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void tryFallbackAddToCart(Map<String, Object> body) {
-        // Try POST api/cart (common)
-        Call<ResponseBody> alt1 = apiService.postCartDynamic(prefManager.getAuthHeader(), "api/cart", body);
-        alt1.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(BookDetailActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (response.code() == 404) {
-                    // Try without 'api' prefix
-                    Call<ResponseBody> alt2 = apiService.postCartDynamic(prefManager.getAuthHeader(), "cart/add", body);
-                    alt2.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (response.isSuccessful()) {
-                                Toast.makeText(BookDetailActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            String msg = "Không thể thêm vào giỏ hàng (fallback). HTTP " + response.code();
-                            Toast.makeText(BookDetailActivity.this, msg, Toast.LENGTH_LONG).show();
-                            Log.e("BookDetailActivity", msg);
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            String msg = "Lỗi kết nối (fallback): " + t.getMessage();
-                            Toast.makeText(BookDetailActivity.this, msg, Toast.LENGTH_LONG).show();
-                            Log.e("BookDetailActivity", msg, t);
-                        }
-                    });
-                    return;
-                }
-                String msg = "Không thể thêm vào giỏ hàng (alt1). HTTP " + response.code();
-                Toast.makeText(BookDetailActivity.this, msg, Toast.LENGTH_LONG).show();
-                Log.e("BookDetailActivity", msg);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                String msg = "Lỗi kết nối (alt1): " + t.getMessage();
-                Toast.makeText(BookDetailActivity.this, msg, Toast.LENGTH_LONG).show();
-                Log.e("BookDetailActivity", msg, t);
             }
         });
     }

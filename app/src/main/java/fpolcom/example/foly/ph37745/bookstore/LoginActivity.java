@@ -71,8 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
         tvForgotPassword.setOnClickListener(v -> {
-            // TODO: Implement forgot password
-            Toast.makeText(this, "Tính năng quên mật khẩu sẽ được thêm sau", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
         });
     }
 

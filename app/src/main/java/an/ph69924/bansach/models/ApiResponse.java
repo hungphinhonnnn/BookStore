@@ -4,6 +4,7 @@ public class ApiResponse<T> {
     private String message;
     private String error;
     private String token;
+    private String resetToken;
     private T data;
     private User user;
     private Book book;
@@ -17,9 +18,11 @@ public class ApiResponse<T> {
     public void setError(String error) { this.error = error; }
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
     public T getData() { return data; }
     public void setData(T data) { this.data = data; }
-    public User getUser() { return user; }
+    public User getUser() { return user != null ? user : data instanceof User ? (User) data : null; }
     public void setUser(User user) { this.user = user; }
     public Book getBook() { return book != null ? book : data instanceof Book ? (Book) data : null; }
     public void setBook(Book book) { this.book = book; }

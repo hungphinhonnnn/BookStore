@@ -35,6 +35,12 @@ public interface ApiService {
     @POST("api/auth/register")
     Call<ApiResponse<User>> register(@Body User user);
 
+    @POST("api/auth/forgot-password")
+    Call<ApiResponse<Void>> forgotPassword(@Body Map<String, String> body);
+
+    @POST("api/auth/reset-password")
+    Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body);
+
     @GET("api/auth/profile")
     Call<ApiResponse<User>> getProfile(@Header("Authorization") String token);
 
