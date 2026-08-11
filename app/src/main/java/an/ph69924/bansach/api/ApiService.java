@@ -10,10 +10,12 @@ import an.ph69924.bansach.models.Book;
 import an.ph69924.bansach.models.BooksResponse;
 import an.ph69924.bansach.models.CartResponse;
 import an.ph69924.bansach.models.CategoriesResponse;
+import an.ph69924.bansach.models.CoinResponse;
 import an.ph69924.bansach.models.Order;
 import an.ph69924.bansach.models.OrdersResponse;
 import an.ph69924.bansach.models.Review;
 import an.ph69924.bansach.models.User;
+import an.ph69924.bansach.models.VouchersResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -73,6 +75,15 @@ public interface ApiService {
 
     @GET("api/orders/{id}")
     Call<ApiResponse<Order>> getOrderDetail(@Header("Authorization") String token, @Path("id") String id);
+
+    @GET("api/vouchers")
+    Call<ApiResponse<VouchersResponse>> getVouchers();
+
+    @GET("api/coins")
+    Call<CoinResponse> getCoins(@Header("Authorization") String token);
+
+    @POST("api/coins/recharge")
+    Call<CoinResponse> rechargeCoins(@Header("Authorization") String token, @Body Map<String, Object> body);
 
     @Multipart
     @POST("api/users/avatar")
