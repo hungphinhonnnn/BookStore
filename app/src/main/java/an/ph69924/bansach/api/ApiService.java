@@ -1,5 +1,6 @@
 package an.ph69924.bansach.api;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -12,6 +13,7 @@ import an.ph69924.bansach.models.CategoriesResponse;
 import an.ph69924.bansach.models.CoinResponse;
 import an.ph69924.bansach.models.Order;
 import an.ph69924.bansach.models.OrdersResponse;
+import an.ph69924.bansach.models.Review;
 import an.ph69924.bansach.models.User;
 import an.ph69924.bansach.models.VouchersResponse;
 import retrofit2.Call;
@@ -90,4 +92,17 @@ public interface ApiService {
     @Multipart
     @POST("api/users/avatar")
     Call<ResponseBody> uploadAvatarApiRaw(@Header("Authorization") String token, @Part MultipartBody.Part image);
+
+    @GET("api/favorites/{userId}")
+    Call<BooksResponse> getFavorites(@Path("userId") String userId);
+
+    @POST("api/favorites/toggle")
+    Call<ApiResponse<Void>> toggleFavorite(@Body Map<String, Object> body);
+
+    // Reviews - Đã sửa path để khớp với backend
+    @GET("api/reviews/{bookId}")
+    Call<ApiResponse<List<Review>>> getReviewsByBook(@Path("bookId") String bookId);
+
+    @POST("api/reviews")
+    Call<ApiResponse<Review>> postReview(@Header("Authorization") String token, @Body Map<String, Object> body);
 }
