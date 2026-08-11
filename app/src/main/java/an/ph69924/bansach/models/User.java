@@ -10,6 +10,7 @@ public class User {
     private String password;
     private String role;
     private String avatar;
+    private int coinBalance;
 
     public User() {}
 
@@ -44,4 +45,6 @@ public class User {
     public void setRole(String role) { this.role = role; }
     public String getAvatar() { return avatar; }
     public void setAvatar(String avatar) { this.avatar = avatar; }
+    public int getCoinBalance() { return coinBalance; }
+    public void setCoinBalance(int coinBalance) { this.coinBalance = coinBalance; }
 }

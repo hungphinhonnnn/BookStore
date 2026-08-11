@@ -25,6 +25,7 @@ import an.ph69924.bansach.api.ApiService;
 import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.ApiResponse;
 import an.ph69924.bansach.models.CartResponse;
+import an.ph69924.bansach.models.CoinResponse;
 import an.ph69924.bansach.models.Order;
 import an.ph69924.bansach.models.User;
 import an.ph69924.bansach.utils.PriceFormatter;
@@ -194,7 +195,29 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
-        // Optional: Implement if backend exposes an API profile endpoint
+        Call<CoinResponse> call = apiService.getCoins(prefManager.getAuthHeader());
+        call.enqueue(new Callback<CoinResponse>() {
+            @Override
+            public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    CoinResponse coinResponse = response.body();
+                    coinBalance = coinResponse.getCoinBalance();
+                    updateCoinBalanceUI();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CoinResponse> call, Throwable t) {
+                Log.e(TAG, "Load coins error: " + t.getMessage(), t);
+            }
+        });
+    }
+
+    private void updateCoinBalanceUI() {
+        if (radioCoin.isChecked()) {
+            tvCoinBalance.setVisibility(View.VISIBLE);
+        }
+        tvCoinBalance.setText("Số dư Coin: " + PriceFormatter.formatVnd(coinBalance));
     }
 
     private void calculateTotal() {
@@ -241,8 +264,8 @@ public class CheckoutActivity extends AppCompatActivity {
         String fullName = edtFullName.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
         String address = edtAddress.getText().toString().trim();
-        // Map to backend-supported values
-        String paymentMethod = radioCash.isChecked() ? "cash_on_delivery" : "cash_on_delivery";
+        boolean payByCoin = radioCoin.isChecked();
+        String paymentMethod = payByCoin ? "coin" : "cash_on_delivery";
 
         // Validation
         if (fullName.isEmpty()) {
@@ -260,6 +283,11 @@ public class CheckoutActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             edtAddress.setError("Vui lòng nhập địa chỉ giao hàng");
             edtAddress.requestFocus();
+            return;
+        }
+
+        if (payByCoin && coinBalance < totalAmount) {
+            Toast.makeText(this, "Số dư coin không đủ. Vui lòng nạp thêm hoặc chọn COD", Toast.LENGTH_LONG).show();
             return;
         }
 
