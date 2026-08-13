@@ -289,6 +289,8 @@ public class CartActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadCart(); // Reload cart when returning to this activity
+        if (progressBar != null && prefManager.isLoggedIn()) {
+            loadCart(); // Reload cart when returning to this activity
+        }
     }
 }

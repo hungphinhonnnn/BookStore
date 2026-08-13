@@ -156,7 +156,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadOrders(); // Reload orders when returning to this activity
+        if (progressBar != null && prefManager.isLoggedIn()) {
+            loadOrders(); // Reload orders when returning to this activity
+        }
     }
 }
 

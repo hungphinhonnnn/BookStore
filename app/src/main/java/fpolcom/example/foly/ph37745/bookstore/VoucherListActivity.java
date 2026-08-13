@@ -106,7 +106,8 @@ public class VoucherListActivity extends AppCompatActivity {
                     if (vouchersResponse != null && vouchersResponse.getVouchers() != null) {
                         vouchers = vouchersResponse.getVouchers();
                         for (Voucher v : vouchers) {
-                            if (v.getId().equals(selectedVoucherId)) {
+                            String vid = v.getId();
+                            if (vid != null && vid.equals(selectedVoucherId)) {
                                 v.setSelected(true);
                             }
                             if (subtotal > 0 && v.getMinOrderValue() > subtotal) {

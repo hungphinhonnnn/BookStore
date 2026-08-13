@@ -186,7 +186,8 @@ public class BookListActivity extends AppCompatActivity {
         addCategoryChip("Tất cả", null, selectedCategoryId == null);
 
         for (Category category : categories) {
-            addCategoryChip(category.getName(), category.getId(), category.getId().equals(selectedCategoryId));
+            String catId = category.getId();
+            addCategoryChip(category.getName(), catId, catId != null && catId.equals(selectedCategoryId));
         }
     }
 
