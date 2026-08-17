@@ -1,12 +1,17 @@
 package fpolcom.example.foly.ph37745.bookstore;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +34,9 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,6 +53,7 @@ import an.ph69924.bansach.api.ApiService;
 import an.ph69924.bansach.api.RetrofitClient;
 import an.ph69924.bansach.models.ApiResponse;
 import an.ph69924.bansach.models.CoinResponse;
+import an.ph69924.bansach.models.RechargeRequest;
 import an.ph69924.bansach.models.User;
 import an.ph69924.bansach.utils.PriceFormatter;
 import an.ph69924.bansach.utils.SharedPreferencesManager;
@@ -317,23 +326,27 @@ public class ProfileActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Nạp Coin")
-                .setMessage("Nhập số coin cần nạp (tối thiểu 1000):")
+                .setMessage("Nhập số coin cần nạp (tối thiểu 1000), chọn phương thức thanh toán:")
                 .setView(container)
-                .setPositiveButton("Nạp", (dialog, which) -> {
-                    String text = input.getText().toString().trim();
-                    int amount;
-                    try {
-                        amount = Integer.parseInt(text);
-                    } catch (NumberFormatException e) {
-                        amount = 0;
-                    }
-                    rechargeCoins(amount);
+                .setPositiveButton("Pay ngay", (dialog, which) -> {
+                    rechargeCoins(parseAmount(input.getText()), "pay");
+                })
+                .setNeutralButton("Chuyển khoản ngân hàng", (dialog, which) -> {
+                    rechargeCoins(parseAmount(input.getText()), "bank");
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
     }
 
-    private void rechargeCoins(int amount) {
+    private int parseAmount(CharSequence text) {
+        try {
+            return Integer.parseInt(text.toString().trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private void rechargeCoins(int amount, String method) {
         if (amount < 1000) {
             Toast.makeText(this, "Số coin nạp tối thiểu là 1000", Toast.LENGTH_SHORT).show();
             return;
@@ -348,6 +361,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
         Map<String, Object> body = new HashMap<>();
         body.put("amount", amount);
+        if ("bank".equals(method)) {
+            body.put("method", "bank");
+        }
         showProgress(true);
         apiService.rechargeCoins("Bearer " + token, body).enqueue(new Callback<CoinResponse>() {
             @Override
@@ -355,6 +371,10 @@ public class ProfileActivity extends AppCompatActivity {
                 showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     CoinResponse coinResponse = response.body();
+                    if ("bank".equals(method) && coinResponse.getRequest() != null) {
+                        showBankInfoDialog(coinResponse.getRequest());
+                        return;
+                    }
                     int balance = coinResponse != null ? coinResponse.getCoinBalance() : 0;
                     tvCoinBalance.setText(PriceFormatter.formatVnd(balance) + " Coin");
                     Toast.makeText(ProfileActivity.this, "Nạp coin thành công", Toast.LENGTH_SHORT).show();
@@ -375,6 +395,139 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showBankInfoDialog(RechargeRequest request) {
+        RechargeRequest.BankInfo bank = request.getBankInfo();
+        if (bank == null) {
+            Toast.makeText(this, "Không có thông tin ngân hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final float density = getResources().getDisplayMetrics().density;
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setGravity(Gravity.CENTER_HORIZONTAL);
+        container.setPadding((int) (20 * density), (int) (8 * density), (int) (20 * density), 0);
+
+        Bitmap qr = generateQr(request.getQrContent(), 512);
+        if (qr != null) {
+            ImageView imgQr = new ImageView(this);
+            imgQr.setImageBitmap(qr);
+            imgQr.setLayoutParams(new LinearLayout.LayoutParams((int) (190 * density), (int) (190 * density)));
+            container.addView(imgQr);
+        }
+
+        TextView tvAmount = new TextView(this);
+        tvAmount.setText("Số tiền: " + PriceFormatter.formatVnd(request.getAmount()) + " đ");
+        tvAmount.setTextSize(17);
+        tvAmount.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        tvAmount.setTextColor(getResources().getColor(android.R.color.black));
+        tvAmount.setPadding(0, (int) (12 * density), 0, (int) (4 * density));
+        container.addView(tvAmount);
+
+        addInfoRow(container, "Ngân hàng", bank.getBankName(), false);
+        addInfoRow(container, "Số tài khoản", bank.getBankNumber(), true);
+        addInfoRow(container, "Chủ tài khoản", bank.getBankHolder(), false);
+        addInfoRow(container, "Nội dung chuyển khoản", request.getCode(), true);
+
+        TextView note = new TextView(this);
+        note.setText("Vui lòng chuyển khoản đúng nội dung. Admin sẽ xác nhận trong thời gian ngắn.");
+        note.setTextSize(13);
+        note.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        note.setPadding(0, (int) (10 * density), 0, 0);
+        note.setGravity(Gravity.CENTER);
+        container.addView(note);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Nạp qua ngân hàng")
+                .setView(container)
+                .setPositiveButton("Tôi đã chuyển khoản", (dialog, which) -> notifyPaid(request))
+                .setNegativeButton("Để sau", null)
+                .show();
+    }
+
+    private void addInfoRow(LinearLayout container, String label, String value, boolean copyable) {
+        final float density = getResources().getDisplayMetrics().density;
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(0, (int) (4 * density), 0, (int) (4 * density));
+
+        TextView tv = new TextView(this);
+        tv.setText(label + ": " + value);
+        tv.setTextSize(14.5f);
+        tv.setTextColor(getResources().getColor(android.R.color.black));
+        tv.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        row.addView(tv);
+
+        if (copyable) {
+            Button btnCopy = new Button(this);
+            btnCopy.setText("Copy");
+            btnCopy.setTextSize(12);
+            btnCopy.setOnClickListener(v -> {
+                ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                if (cm != null) {
+                    cm.setPrimaryClip(ClipData.newPlainText(label, value));
+                    Toast.makeText(this, "Đã sao chép " + label, Toast.LENGTH_SHORT).show();
+                }
+            });
+            row.addView(btnCopy);
+        }
+        container.addView(row);
+    }
+
+    private void notifyPaid(RechargeRequest request) {
+        String token = prefManager.getToken();
+        if (token == null) {
+            Toast.makeText(this, "Phiên đăng nhập đã hết hạn", Toast.LENGTH_SHORT).show();
+            prefManager.clear();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+        showProgress(true);
+        apiService.notifyPaid("Bearer " + token, request.getId()).enqueue(new Callback<CoinResponse>() {
+            @Override
+            public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
+                showProgress(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    String msg = response.body().getMessage();
+                    Toast.makeText(ProfileActivity.this,
+                            msg != null ? msg : "Đã ghi nhận chuyển khoản. Chờ admin xác nhận.",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    String err = "Không thể ghi nhận";
+                    if (response.body() != null && response.body().getError() != null) {
+                        err = response.body().getError();
+                    }
+                    Toast.makeText(ProfileActivity.this, err, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CoinResponse> call, Throwable t) {
+                showProgress(false);
+                Toast.makeText(ProfileActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private Bitmap generateQr(String content, int size) {
+        try {
+            BitMatrix matrix = new QRCodeWriter()
+                    .encode(content == null ? "" : content, BarcodeFormat.QR_CODE, size, size);
+            Bitmap bmp = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    bmp.setPixel(x, y, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            return bmp;
+        } catch (Exception e) {
+            android.util.Log.e("Profile", "QR generate error", e);
+            return null;
+        }
     }
 
     private void setupOrders() {

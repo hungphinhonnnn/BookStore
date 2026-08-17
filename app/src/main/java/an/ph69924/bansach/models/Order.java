@@ -15,6 +15,8 @@ public class Order {
     private List<OrderItem> items;
     private double discountAmount;
     private String discountCode;
+    private String cancelReason;
+    private String cancelledAt;
 
     public String getId() { return id != null ? id : _id; }
     public void setId(String id) { this.id = id; }
@@ -46,4 +48,11 @@ public class Order {
     public void setDiscountAmount(double discountAmount) { this.discountAmount = discountAmount; }
     public String getDiscountCode() { return discountCode; }
     public void setDiscountCode(String discountCode) { this.discountCode = discountCode; }
+    public String getCancelReason() { return cancelReason; }
+    public void setCancelReason(String cancelReason) { this.cancelReason = cancelReason; }
+    public String getCancelledAt() { return cancelledAt; }
+    public void setCancelledAt(String cancelledAt) { this.cancelledAt = cancelledAt; }
+    public boolean canCancel() {
+        return "pending".equals(status) || "confirmed".equals(status);
+    }
 }

@@ -17,6 +17,9 @@ public class Book {
     @SerializedName("preview")
     private String preview; // Khớp với trường 'preview' trong schema Backend
 
+    private double avgRating;
+    private int reviewCount;
+
     public String getId() { return id != null ? id : _id; }
     public void setId(String id) { this.id = id; }
     public String get_id() { return _id; }
@@ -40,4 +43,8 @@ public class Book {
     
     public String getPreview() { return preview; }
     public void setPreview(String preview) { this.preview = preview; }
+    public double getAvgRating() { return avgRating; }
+    public void setAvgRating(double avgRating) { this.avgRating = avgRating; }
+    public int getReviewCount() { return reviewCount; }
+    public void setReviewCount(int reviewCount) { this.reviewCount = reviewCount; }
 }

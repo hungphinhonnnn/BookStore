@@ -3,9 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,15 +24,15 @@
 
             <ImageView
                 android:id="@+id/imgUserAvatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:src="@drawable/ic_launcher_background"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -39,7 +42,8 @@
                     android:layout_height="wrap_content"
                     android:text="User Name"
                     android:textStyle="bold"
-                    android:textColor="#333" />
+                    android:textColor="#333"
+                    android:textSize="14sp" />
 
                 <RatingBar
                     android:id="@+id/ratingBar"
@@ -56,17 +60,65 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01/01/2023"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textColor="#999" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvReviewComment"
+                android:id="@+id/tvMyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đánh giá của bạn"
+                android:textSize="11sp"
+                android:textColor="#2196F3"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:layout_marginBottom="4dp" />
+
+        <TextView
+                android:id="@+id/tvReviewComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is a comment."
+                android:textColor="#555"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.15" />
+
+        <LinearLayout
+            android:id="@+id/layoutMyReviewActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="This is a comment."
-            android:textColor="#666" />
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/btnEditReview"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="Sửa"
+                android:textSize="13sp"
+                android:textColor="#2196F3"
+                android:background="@drawable/bg_category_chip"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/btnDeleteReview"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="Xóa"
+                android:textSize="13sp"
+                android:textColor="#F44336"
+                android:background="@drawable/bg_category_chip" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

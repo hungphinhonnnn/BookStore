@@ -56,6 +56,9 @@
             android:name=".SeasonalBooksActivity"
             android:exported="false" />
         <activity
+            android:name=".BestSellersActivity"
+            android:exported="false" />
+        <activity
             android:name=".FavoriteBooksActivity"
             android:exported="false" />
         <activity

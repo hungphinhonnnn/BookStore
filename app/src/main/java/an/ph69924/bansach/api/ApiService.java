@@ -52,6 +52,9 @@ public interface ApiService {
             @Query("search") String search
     );
 
+    @GET("api/books/best-sellers")
+    Call<BooksResponse> getBestSellers(@Query("limit") Integer limit);
+
     @GET("api/books/{id}")
     Call<ApiResponse<Book>> getBookDetail(@Path("id") String id);
 
@@ -91,6 +94,12 @@ public interface ApiService {
     @POST("api/coins/recharge")
     Call<CoinResponse> rechargeCoins(@Header("Authorization") String token, @Body Map<String, Object> body);
 
+    @GET("api/coins/recharge-requests")
+    Call<CoinResponse> getRechargeRequests(@Header("Authorization") String token);
+
+    @POST("api/coins/recharge-requests/{id}/notify-paid")
+    Call<CoinResponse> notifyPaid(@Header("Authorization") String token, @Path("id") String id);
+
     @Multipart
     @POST("api/users/avatar")
     Call<ApiResponse<User>> uploadAvatar(@Header("Authorization") String token, @Part MultipartBody.Part image);
@@ -109,6 +118,22 @@ public interface ApiService {
     @GET("api/reviews/{bookId}")
     Call<ApiResponse<List<Review>>> getReviewsByBook(@Path("bookId") String bookId);
 
+    @GET("api/reviews/{bookId}/check")
+    Call<ApiResponse<Map<String, Object>>> checkReviewStatus(@Header("Authorization") String token, @Path("bookId") String bookId);
+
     @POST("api/reviews")
     Call<ApiResponse<Review>> postReview(@Header("Authorization") String token, @Body Map<String, Object> body);
+
+    @PUT("api/reviews/{id}")
+    Call<ApiResponse<Review>> updateReview(@Header("Authorization") String token, @Path("id") String id, @Body Map<String, Object> body);
+
+    @retrofit2.http.DELETE("api/reviews/{id}")
+    Call<ApiResponse<Void>> deleteReview(@Header("Authorization") String token, @Path("id") String id);
+
+    // Order cancel
+    @retrofit2.http.PATCH("api/orders/{id}/cancel")
+    Call<ApiResponse<Order>> cancelOrder(@Header("Authorization") String token, @Path("id") String id, @Body Map<String, Object> body);
+
+    @GET("api/orders/check-purchased/{bookId}")
+    Call<ApiResponse<Map<String, Object>>> checkPurchased(@Header("Authorization") String token, @Path("bookId") String bookId);
 }

@@ -28,6 +28,7 @@ import an.ph69924.bansach.models.Book;
 import an.ph69924.bansach.models.BooksResponse;
 import an.ph69924.bansach.models.CategoriesResponse;
 import an.ph69924.bansach.models.Category;
+import an.ph69924.bansach.utils.CartBadgeHelper;
 import an.ph69924.bansach.utils.FavoriteManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -123,7 +124,7 @@ public class BookListActivity extends AppCompatActivity {
         findViewById(R.id.btnCart).setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
         findViewById(R.id.btnProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         findViewById(R.id.btnExplore).setOnClickListener(v ->
-                startActivity(new Intent(this, SeasonalBooksActivity.class)));
+                startActivity(new Intent(this, BestSellersActivity.class)));
         findViewById(R.id.btnAllCategories).setOnClickListener(v -> clearFilters());
         findViewById(R.id.btnExploreAll).setOnClickListener(v -> clearFilters());
 
@@ -154,6 +155,7 @@ public class BookListActivity extends AppCompatActivity {
         if (bookAdapter != null) {
             bookAdapter.refreshFavoriteStates();
         }
+        CartBadgeHelper.updateBadge(this);
     }
 
     private void loadCategories() {

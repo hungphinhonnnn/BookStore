@@ -1,12 +1,13 @@
 package fpolcom.example.foly.ph37745.bookstore;
 
 import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
 
 public class PreviewActivity extends AppCompatActivity {
     @Override
@@ -19,21 +20,25 @@ public class PreviewActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        String title = getIntent().getStringExtra("book_title");
+        if (title != null && !title.isEmpty()) {
+            getSupportActionBar().setTitle("Đọc thử: " + title);
+        }
 
         String content = getIntent().getStringExtra("preview_content");
         TextView tvContent = findViewById(R.id.tvPreviewContent);
 
         if (content != null && !content.isEmpty()) {
-            // Kiểm tra nếu nội dung là một liên kết (http/https)
-            if (content.startsWith("http")) {
-                tvContent.setText("Đang mở liên kết: " + content);
-                // Bạn có thể dùng WebView ở đây nếu muốn, nhưng đơn giản nhất là hiển thị text hoặc mở Browser
-            } else {
+            try {
+                tvContent.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_COMPACT));
+            } catch (Exception e) {
                 tvContent.setText(content);
             }
+            tvContent.setMovementMethod(new ScrollingMovementMethod());
         } else {
-            tvContent.setText("Không có nội dung đọc thử.");
+            tvContent.setText("Sách này hiện chưa có nội dung đọc thử.");
         }
     }
 }

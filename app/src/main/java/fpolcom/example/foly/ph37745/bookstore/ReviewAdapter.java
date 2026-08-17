@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -20,6 +21,13 @@ import an.ph69924.bansach.models.Review;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
     private List<Review> reviews;
+    private String currentUserId;
+    private OnReviewActionListener listener;
+
+    public interface OnReviewActionListener {
+        void onEditReview(Review review);
+        void onDeleteReview(Review review);
+    }
 
     public ReviewAdapter(List<Review> reviews) {
         this.reviews = reviews;
@@ -28,6 +36,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
         notifyDataSetChanged();
+    }
+
+    public void setCurrentUserId(String userId) {
+        this.currentUserId = userId;
+    }
+
+    public void setOnReviewActionListener(OnReviewActionListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -60,6 +76,20 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                     .circleCrop()
                     .into(holder.imgUserAvatar);
         }
+
+        boolean isMyReview = currentUserId != null
+                && review.getUserId() != null
+                && currentUserId.equals(review.getUserId().getId());
+
+        if (isMyReview && listener != null) {
+            holder.layoutMyReviewActions.setVisibility(View.VISIBLE);
+            holder.tvMyLabel.setVisibility(View.VISIBLE);
+            holder.btnEditReview.setOnClickListener(v -> listener.onEditReview(review));
+            holder.btnDeleteReview.setOnClickListener(v -> listener.onDeleteReview(review));
+        } else {
+            holder.layoutMyReviewActions.setVisibility(View.GONE);
+            holder.tvMyLabel.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -69,8 +99,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     static class ReviewViewHolder extends RecyclerView.ViewHolder {
         ImageView imgUserAvatar;
-        TextView tvUserName, tvReviewDate, tvReviewComment;
+        TextView tvUserName, tvReviewDate, tvReviewComment, tvMyLabel;
         RatingBar ratingBar;
+        LinearLayout layoutMyReviewActions;
+        TextView btnEditReview, btnDeleteReview;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +111,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             tvReviewDate = itemView.findViewById(R.id.tvReviewDate);
             tvReviewComment = itemView.findViewById(R.id.tvReviewComment);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            layoutMyReviewActions = itemView.findViewById(R.id.layoutMyReviewActions);
+            btnEditReview = itemView.findViewById(R.id.btnEditReview);
+            btnDeleteReview = itemView.findViewById(R.id.btnDeleteReview);
+            tvMyLabel = itemView.findViewById(R.id.tvMyLabel);
         }
     }
 }

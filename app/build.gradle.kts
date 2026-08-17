@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.glide)
+    implementation(libs.zxing.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

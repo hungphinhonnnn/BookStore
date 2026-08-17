@@ -407,6 +407,61 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Hủy đơn hàng -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardCancelSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FEF2F2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvCancelInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/danger"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvCancelReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/textSecondary"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelOrder"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Hủy đơn hàng"
+            android:textSize="16sp"
+            android:textColor="@color/danger"
+            app:strokeColor="@color/danger"
+            app:cornerRadius="12dp"
+            android:visibility="gone" />
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
